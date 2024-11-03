@@ -1,27 +1,27 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Intro;
+namespace MovieCharactersAPI.Models;
 
 public class Movie
 {
     [Key]
-    public int Id { get; set; } // Autoincremented Id
+    public int Id { get; set; }
 
     [Required]
-    public string Title { get; set; } // Movie title
+    [MaxLength(100)]
+    public string Title { get; set; }
 
     [Required]
-    public string Genre { get; set; } // Comma separated genres
+    public int ReleaseYear { get; set; }
 
     [Required]
-    public int ReleaseYear { get; set; } // Release year
+    [MaxLength(50)]
+    public string Genre { get; set; }
 
     [Required]
-    public string Director { get; set; } // Director's name
+    [MaxLength(50)]
+    public string Director { get; set; }
 
-    [Url]
-    public string Picture { get; set; } // URL to movie poster
-
-    [Url]
-    public string Trailer { get; set; } // URL to trailer (YouTube)
+    // Navigation property for characters
+    public ICollection<Character> Characters { get; set; }
 } 
