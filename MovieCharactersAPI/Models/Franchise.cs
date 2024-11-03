@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Intro;
+namespace MovieCharactersAPI.Models;
 
 public class Franchise
 {
@@ -8,8 +8,10 @@ public class Franchise
     public int Id { get; set; } // Autoincremented Id
 
     [Required]
-    public string Name { get; set; } // Franchise name
+    public string Name { get; set; } = string.Empty; // Franchise name
 
     [Required]
-    public string Description { get; set; } // Franchise description
+    public string Description { get; set; } = string.Empty; // Franchise description
+
+    public ICollection<Movie> Movies { get; set; } = new List<Movie>();
 } 

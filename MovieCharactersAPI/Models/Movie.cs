@@ -9,19 +9,22 @@ public class Movie
 
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [Required]
-    public int ReleaseYear { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public string Genre { get; set; }
+    public int ReleaseYear { get; set; } 
 
     [Required]
     [MaxLength(50)]
-    public string Director { get; set; }
+    public string Genre { get; set; } = string.Empty;
+
+    [Required]
+    [MaxLength(50)]
+    public string Director { get; set; } = string.Empty;
 
     // Navigation property for characters
-    public ICollection<Character> Characters { get; set; }
+    public ICollection<Character> Characters { get; set; } = new List<Character>();
+
+    public int FranchiseId { get; set; }
+    public Franchise? Franchise { get; set; }
 } 

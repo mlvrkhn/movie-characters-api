@@ -5,22 +5,20 @@ public class Character
 {
     [Key]
     public int Id { get; set; }
-
     [Required]
     [MaxLength(100)]
-    public string FullName { get; set; }
+    public string FullName { get; set; } = string.Empty; 
 
     [MaxLength(100)]
-    public string? Alias { get; set; }
+    public string Alias { get; set; } = string.Empty;
 
     [Required]
     [MaxLength(50)]
-    public string Gender { get; set; }
+    public string Gender { get; set; } = string.Empty;
 
     [Required]
     [Url]
-    public string Picture { get; set; }
+    public string Picture { get; set; } = string.Empty;  
 
-    public int? MovieId { get; set; }
-    public Movie? Movie { get; set; }
+    public ICollection<Movie> Movies { get; set; } = new List<Movie>();
 }
