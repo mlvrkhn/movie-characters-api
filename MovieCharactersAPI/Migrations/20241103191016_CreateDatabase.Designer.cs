@@ -11,8 +11,8 @@ using MovieCharactersAPI.Data;
 namespace MovieCharactersAPI.Migrations
 {
     [DbContext(typeof(MovieCharactersDbContext))]
-    [Migration("20241103185006_UpdatedModels")]
-    partial class UpdatedModels
+    [Migration("20241103191016_CreateDatabase")]
+    partial class CreateDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,7 +35,29 @@ namespace MovieCharactersAPI.Migrations
 
                     b.HasIndex("MoviesId");
 
-                    b.ToTable("MovieCharacter", (string)null);
+                    b.ToTable("CharacterMovie", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            CharactersId = 1,
+                            MoviesId = 1
+                        },
+                        new
+                        {
+                            CharactersId = 2,
+                            MoviesId = 2
+                        },
+                        new
+                        {
+                            CharactersId = 3,
+                            MoviesId = 3
+                        },
+                        new
+                        {
+                            CharactersId = 4,
+                            MoviesId = 4
+                        });
                 });
 
             modelBuilder.Entity("MovieCharactersAPI.Models.Character", b =>
@@ -68,6 +90,40 @@ namespace MovieCharactersAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Characters");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Alias = "Sen",
+                            FullName = "Chihiro Ogino",
+                            Gender = "Female",
+                            Picture = "https://example.com/chihiro.jpg"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Alias = "King of the Forest",
+                            FullName = "Totoro",
+                            Gender = "Unknown",
+                            Picture = "https://example.com/totoro.jpg"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Alias = "Princess Mononoke",
+                            FullName = "San",
+                            Gender = "Female",
+                            Picture = "https://example.com/san.jpg"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Alias = "Howl",
+                            FullName = "Howl Jenkins Pendragon",
+                            Gender = "Male",
+                            Picture = "https://example.com/howl.jpg"
+                        });
                 });
 
             modelBuilder.Entity("MovieCharactersAPI.Models.Franchise", b =>
@@ -89,6 +145,32 @@ namespace MovieCharactersAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Franchises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Japanese animated films produced by Studio Ghibli",
+                            Name = "Studio Ghibli"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Films directed by Hayao Miyazaki",
+                            Name = "Hayao Miyazaki Collection"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Films directed by Isao Takahata",
+                            Name = "Isao Takahata Collection"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Fantasy-themed Studio Ghibli films",
+                            Name = "Ghibli Fantasy World"
+                        });
                 });
 
             modelBuilder.Entity("MovieCharactersAPI.Models.Movie", b =>
@@ -125,6 +207,44 @@ namespace MovieCharactersAPI.Migrations
                     b.HasIndex("FranchiseId");
 
                     b.ToTable("Movies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Director = "Hayao Miyazaki",
+                            FranchiseId = 1,
+                            Genre = "Fantasy/Adventure",
+                            ReleaseYear = 2001,
+                            Title = "Spirited Away"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Director = "Hayao Miyazaki",
+                            FranchiseId = 2,
+                            Genre = "Fantasy/Family",
+                            ReleaseYear = 1988,
+                            Title = "My Neighbor Totoro"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Director = "Hayao Miyazaki",
+                            FranchiseId = 4,
+                            Genre = "Fantasy/Adventure",
+                            ReleaseYear = 1997,
+                            Title = "Princess Mononoke"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Director = "Isao Takahata",
+                            FranchiseId = 3,
+                            Genre = "Drama/War",
+                            ReleaseYear = 1988,
+                            Title = "Grave of the Fireflies"
+                        });
                 });
 
             modelBuilder.Entity("CharacterMovie", b =>
