@@ -5,6 +5,7 @@ using MovieCharactersAPI.Features.Characters;
 using MovieCharactersAPI.Features.Movies;
 using MovieCharactersAPI.Features.Franchises;
 using MovieCharactersAPI.Models;
+using MovieCharactersAPI.Repositories;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +32,11 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.CreateMap<FranchiseUpdateDTO, Franchise>();
 }, AppDomain.CurrentDomain.GetAssemblies());
 
+// Repositories
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<ICharacterRepository, CharacterRepository>();
+builder.Services.AddScoped<IFranchiseRepository, FranchiseRepository>();
+
 // Services
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
@@ -49,6 +55,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<MovieCharactersDbContext>();
+    context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
 }
 
@@ -57,9 +64,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    // During development, you can temporarily redirect HTTP to HTTPS
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
+else 
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 

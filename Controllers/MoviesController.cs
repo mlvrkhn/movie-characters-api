@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieCharactersAPI.Models;
+using MovieCharactersAPI.Features.Movies;
 
 namespace MovieCharactersAPI.Controllers
 {
@@ -15,15 +16,23 @@ namespace MovieCharactersAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
             var movies = await _movieRepository.GetAllAsync();
-            return Ok(movies);
+            var movieDtos = movies.Select(m => new MovieDTO
+            {
+                Id = m.Id,
+                Title = m.Title,
+                CharacterIds = m.Characters.Select(c => c.Id).ToList(),
+                FranchiseId = m.FranchiseId
+            });
+            
+            return Ok(movieDtos);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
-        {
+        public async Task<ActionResult<MovieDetailDTO>> GetMovie(int id)
+        {   
             try
             {
                 var movie = await _movieRepository.GetByIdAsync(id);
