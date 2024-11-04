@@ -5,11 +5,11 @@ namespace MovieCharactersAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CharacterController : ControllerBase
+    public class CharactersController : ControllerBase
     {
         private readonly ICharacterRepository _characterRepository;
 
-        public CharacterController(ICharacterRepository characterRepository)
+        public CharactersController(ICharacterRepository characterRepository)
         {
             _characterRepository = characterRepository;
         }

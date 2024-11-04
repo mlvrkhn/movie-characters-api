@@ -29,7 +29,7 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.CreateMap<Franchise, FranchiseDTO>();
     cfg.CreateMap<FranchiseCreateDTO, Franchise>();
     cfg.CreateMap<FranchiseUpdateDTO, Franchise>();
-});
+}, AppDomain.CurrentDomain.GetAssemblies());
 
 // Services
 builder.Services.AddScoped<IMovieService, MovieService>();
