@@ -14,4 +14,6 @@ public class Franchise
     public string Description { get; set; } = string.Empty; // Franchise description
 
     public ICollection<Movie> Movies { get; set; } = new List<Movie>();
+
+    public int OwnerId { get; set; }
 } 
