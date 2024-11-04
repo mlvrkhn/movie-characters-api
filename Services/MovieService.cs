@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieCharactersAPI.Data;
 using MovieCharactersAPI.Models;
-using MovieCharactersAPI.Services.Interfaces;
 
 namespace MovieCharactersAPI.Services
 {
