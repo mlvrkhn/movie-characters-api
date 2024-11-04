@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+using MovieCharactersAPI.Features.Movies;
 
 namespace MovieCharactersAPI.Features.Characters
 {
