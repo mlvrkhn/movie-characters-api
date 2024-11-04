@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieCharactersAPI.Data;
+using MovieCharactersAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<ICharacterService, CharacterService>();
-// builder.Services.AddScoped<IFranchiseService, FranchiseService>();
+builder.Services.AddScoped<IFranchiseService, FranchiseService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -19,7 +20,7 @@ builder.Services.AddDbContext<MovieCharactersDbContext>(options =>
 
 var app = builder.Build();
 
-// Add this section to create/initialize database
+// Create/initialize database
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
