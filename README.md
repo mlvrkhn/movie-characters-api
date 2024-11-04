@@ -18,7 +18,7 @@ A Web API for managing movies, characters, and franchises. This API allows you t
 - Swagger/OpenAPI
 
 ## Database Structure
-![Database Diagram](/MovieCharactersAPI/Data/chart.svg)
+![Database Diagram](Data/chart.svg)
 
 ## Getting Started
 
