@@ -98,9 +98,25 @@ public class FranchiseRepository : IFranchiseRepository
             .FirstOrDefaultAsync(f => f.Id == franchiseId)
             ?? throw new KeyNotFoundException($"Franchise with ID {franchiseId} not found");
 
+        // Verify all movieIds exist and get the movies
         var movies = await _context.Movies
             .Where(m => movieIds.Contains(m.Id))
             .ToListAsync();
+
+        // Check if all provided IDs were found
+        if (movies.Count != movieIds.Count())
+        {
+            var foundIds = movies.Select(m => m.Id);
+            var notFoundIds = movieIds.Except(foundIds);
+            throw new KeyNotFoundException($"Movies with IDs {string.Join(", ", notFoundIds)} not found");
+        }
+
+        // Check if any movies belong to other franchises
+        var moviesInOtherFranchises = movies.Where(m => m.FranchiseId != franchiseId);
+        if (moviesInOtherFranchises.Any())
+        {
+            throw new InvalidOperationException($"Movies with IDs {string.Join(", ", moviesInOtherFranchises.Select(m => m.Id))} already belong to other franchises");
+        }
 
         franchise.Movies = movies;
         await _context.SaveChangesAsync();
