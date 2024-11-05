@@ -4,6 +4,7 @@ using MovieCharactersAPI.Features.Franchises;
 using AutoMapper;
 using MovieCharactersAPI.Features.Characters;
 using MovieCharactersAPI.Features.Movies;
+using Microsoft.EntityFrameworkCore;
 
 namespace MovieCharactersAPI.Controllers
 {

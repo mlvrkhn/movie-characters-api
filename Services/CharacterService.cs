@@ -44,15 +44,8 @@ public class CharacterService : ICharacterService
 
     public async Task<CharacterDTO?> GetCharacterByIdAsync(int id)
     {
-        try
-        {
-            var character = await _characterRepository.GetByIdAsync(id);
-            return character == null ? throw new Exception($"Character with ID {id} not found") : _mapper.Map<CharacterDTO>(character);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"Failed to retrieve character: {ex.Message}");
-        }
+        var character = await _characterRepository.GetByIdAsync(id);
+        return _mapper.Map<CharacterDTO>(character);
     }
 
     public async Task<IEnumerable<CharacterDTO>> GetAllCharactersAsync()

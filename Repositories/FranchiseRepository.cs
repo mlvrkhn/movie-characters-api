@@ -42,9 +42,22 @@ public class FranchiseRepository : IFranchiseRepository
         if (!exists)
             throw new KeyNotFoundException($"Franchise with ID {franchise.Id} not found");
 
-        _context.Entry(franchise).State = EntityState.Modified;
+        // Get existing franchise with movies
+        var existingFranchise = await _context.Franchises
+            .Include(f => f.Movies)
+            .FirstAsync(f => f.Id == franchise.Id);
+
+        // Update basic properties
+        _context.Entry(existingFranchise).CurrentValues.SetValues(franchise);
+
+        // Update movie relationships if MovieIds are provided
+        if (franchise.Movies != null)
+        {
+            existingFranchise.Movies = franchise.Movies;
+        }
+
         await _context.SaveChangesAsync();
-        return franchise;
+        return existingFranchise;
     }
 
     public async Task DeleteAsync(int id)
