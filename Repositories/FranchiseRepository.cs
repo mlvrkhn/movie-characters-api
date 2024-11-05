@@ -1,63 +1,62 @@
 using Microsoft.EntityFrameworkCore;
 using MovieCharactersAPI.Models;
 using MovieCharactersAPI.Data;
+using MovieCharactersAPI.Features.Franchises;
+using MovieCharactersAPI.Features.Characters;
+using AutoMapper;
 
-
-/// <summary>
-/// Implementation of IFranchiseRepository for managing Franchise entities
-/// </summary>
 public class FranchiseRepository : IFranchiseRepository
 {
     private readonly MovieCharactersDbContext _context;
+    private readonly IMapper _mapper;
 
-    public FranchiseRepository(MovieCharactersDbContext context)
+    public FranchiseRepository(MovieCharactersDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<Franchise>> GetAllAsync()
+    public async Task<IEnumerable<FranchiseDTO>> GetAllAsync()
     {
-        return await _context.Franchises
+        var franchises = await _context.Franchises
             .Include(f => f.Movies)
             .ToListAsync();
+        return _mapper.Map<IEnumerable<FranchiseDTO>>(franchises);
     }
 
-    public async Task<Franchise?> GetByIdAsync(int id)
+    public async Task<FranchiseDTO?> GetByIdAsync(int id)
     {
-        return await _context.Franchises
+        var franchise = await _context.Franchises
             .Include(f => f.Movies)
             .FirstOrDefaultAsync(f => f.Id == id);
+        return _mapper.Map<FranchiseDTO>(franchise);
     }
 
-    public async Task<Franchise> CreateAsync(Franchise franchise)
+    public async Task<FranchiseDTO> CreateAsync(FranchiseCreateDTO franchiseCreateDto)
     {
-        _context.Franchises.Add(franchise);
+        var franchise = _mapper.Map<Franchise>(franchiseCreateDto);
+        await _context.Franchises.AddAsync(franchise);
         await _context.SaveChangesAsync();
-        return franchise;
+        return _mapper.Map<FranchiseDTO>(franchise);
     }
 
-    public async Task<Franchise> UpdateAsync(Franchise franchise)
+    public async Task<FranchiseDTO> UpdateAsync(FranchiseUpdateDTO franchiseDto)
     {
-        var exists = await ExistsAsync(franchise.Id);
+        var exists = await ExistsAsync(franchiseDto.Id);
         if (!exists)
-            throw new KeyNotFoundException($"Franchise with ID {franchise.Id} not found");
+            throw new KeyNotFoundException($"Franchise with ID {franchiseDto.Id} not found");
 
         // Get existing franchise with movies
         var existingFranchise = await _context.Franchises
             .Include(f => f.Movies)
-            .FirstAsync(f => f.Id == franchise.Id);
+            .FirstAsync(f => f.Id == franchiseDto.Id);
 
         // Update basic properties
-        _context.Entry(existingFranchise).CurrentValues.SetValues(franchise);
-
-        // Update movie relationships if MovieIds are provided
-        if (franchise.Movies != null)
-        {
-            existingFranchise.Movies = franchise.Movies;
-        }
+        _mapper.Map(franchiseDto, existingFranchise);
 
         await _context.SaveChangesAsync();
-        return existingFranchise;
+        
+        return _mapper.Map<FranchiseDTO>(existingFranchise);
     }
 
     public async Task DeleteAsync(int id)
@@ -74,33 +73,30 @@ public class FranchiseRepository : IFranchiseRepository
         return await _context.Franchises.AnyAsync(f => f.Id == id);
     }
 
-    public async Task<IEnumerable<Franchise>> GetByOwnerIdAsync(int ownerId)
+    public async Task<IEnumerable<FranchiseDTO>> GetByOwnerIdAsync(int ownerId)
     {
-        return await _context.Franchises
+        var franchises = await _context.Franchises
             .Where(f => f.OwnerId == ownerId)
             .ToListAsync();
+        return _mapper.Map<IEnumerable<FranchiseDTO>>(franchises);
     }
 
-    public async Task<Franchise> AddAsync(Franchise franchise)
+    public async Task<FranchiseDTO?> GetWithMoviesAsync(int id)
     {
-        await _context.Franchises.AddAsync(franchise);
-        await _context.SaveChangesAsync();
-        return franchise;
-    }
-
-    public async Task<Franchise?> GetWithMoviesAsync(int id)
-    {
-        return await _context.Franchises
+        var franchise = await _context.Franchises
             .Include(f => f.Movies)
             .FirstOrDefaultAsync(f => f.Id == id)
             ?? throw new KeyNotFoundException($"Franchise with ID {id} not found");
+        
+        return _mapper.Map<FranchiseDTO>(franchise);
     }
 
-    public async Task<Franchise?> UpdateMoviesAsync(int franchiseId, IEnumerable<int> movieIds)
+    public async Task<FranchiseDTO?> UpdateMoviesAsync(int franchiseId, IEnumerable<int> movieIds)
     {
-        var franchise = await GetByIdAsync(franchiseId);
-        if (franchise == null)
-            throw new KeyNotFoundException($"Franchise with ID {franchiseId} not found");
+        var franchise = await _context.Franchises
+            .Include(f => f.Movies)
+            .FirstOrDefaultAsync(f => f.Id == franchiseId)
+            ?? throw new KeyNotFoundException($"Franchise with ID {franchiseId} not found");
 
         var movies = await _context.Movies
             .Where(m => movieIds.Contains(m.Id))
@@ -108,16 +104,17 @@ public class FranchiseRepository : IFranchiseRepository
 
         franchise.Movies = movies;
         await _context.SaveChangesAsync();
-        return franchise;
+        return _mapper.Map<FranchiseDTO>(franchise);
     }
 
-    public async Task<IEnumerable<Character>> GetCharactersInFranchiseAsync(int franchiseId)
+    public async Task<IEnumerable<CharacterDTO>> GetCharactersInFranchiseAsync(int franchiseId)
     {
         var franchise = await _context.Franchises
             .Include(f => f.Movies)
             .ThenInclude(m => m.Characters)
             .FirstOrDefaultAsync(f => f.Id == franchiseId);
 
-        return franchise?.Movies.SelectMany(m => m.Characters) ?? Enumerable.Empty<Character>();
+        var characters = franchise?.Movies.SelectMany(m => m.Characters) ?? Enumerable.Empty<Character>();
+        return _mapper.Map<IEnumerable<CharacterDTO>>(characters);
     }
 } 

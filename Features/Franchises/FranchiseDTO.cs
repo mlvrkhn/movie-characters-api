@@ -1,4 +1,5 @@
 namespace MovieCharactersAPI.Features.Franchises;
+using MovieCharactersAPI.Features.Movies;
 
 public class FranchiseDTO
 {
@@ -11,4 +12,6 @@ public class FranchiseDTO
     public List<int> MovieIds { get; set; } = new();
 
     public int OwnerId { get; set; }
+
+    public ICollection<MovieDTO> Movies { get; set; } = new List<MovieDTO>();
 }

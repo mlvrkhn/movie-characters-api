@@ -26,8 +26,8 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.CreateMap<MovieUpdateDTO, Movie>();
 
     // Franchise mappings
-    cfg.CreateMap<Franchise, FranchiseDTO>();
-    cfg.CreateMap<FranchiseCreateDTO, Franchise>();
+    cfg.CreateMap<Franchise, FranchiseDTO>().ReverseMap();
+    cfg.CreateMap<FranchiseCreateDTO, Franchise>().ReverseMap();
     cfg.CreateMap<FranchiseUpdateDTO, Franchise>();
 }, AppDomain.CurrentDomain.GetAssemblies());
 
