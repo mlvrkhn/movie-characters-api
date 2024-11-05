@@ -41,7 +41,7 @@ namespace MovieCharactersAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<MovieDTO>> CreateMovie(MovieCreateDTO movieDto)
+        public async Task<ActionResult<MovieDTO>> CreateMovie([FromBody] MovieCreateDTO movieDto)
         {
             var movie = _mapper.Map<Movie>(movieDto);
             var createdMovie = await _movieRepository.CreateAsync(movie);
@@ -52,7 +52,7 @@ namespace MovieCharactersAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<MovieDTO>> UpdateMovie(int id, MovieUpdateDTO movieDto)
+        public async Task<ActionResult<MovieDTO>> UpdateMovie(int id, [FromBody] MovieUpdateDTO movieDto)
         {
             if (id != movieDto.Id)
                 return BadRequest();
