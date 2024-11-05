@@ -3,6 +3,7 @@ using MovieCharactersAPI.Models;
 using MovieCharactersAPI.Features.Franchises;
 using AutoMapper;
 using MovieCharactersAPI.Features.Characters;
+using MovieCharactersAPI.Features.Movies;
 
 namespace MovieCharactersAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace MovieCharactersAPI.Controllers
         public async Task<ActionResult<IEnumerable<FranchiseDTO>>> GetFranchises()
         {
             var franchises = await _franchiseRepository.GetAllAsync();
+            if (franchises == null) return NotFound();
             return MapAndReturn<IEnumerable<Franchise>, IEnumerable<FranchiseDTO>>(franchises);
         }
 
@@ -88,6 +90,7 @@ namespace MovieCharactersAPI.Controllers
             try
             {
                 var franchises = await _franchiseRepository.GetByOwnerIdAsync(ownerId);
+                if (franchises == null) return NotFound();
                 return MapAndReturn<IEnumerable<Franchise>, IEnumerable<FranchiseDTO>>(franchises);
             }
             catch (KeyNotFoundException)
@@ -100,7 +103,38 @@ namespace MovieCharactersAPI.Controllers
         public async Task<ActionResult<IEnumerable<CharacterDTO>>> GetCharactersInFranchise(int id)
         {
             var characters = await _franchiseRepository.GetCharactersInFranchiseAsync(id);
+            if (characters == null) return NotFound();
             return MapAndReturn<IEnumerable<Character>, IEnumerable<CharacterDTO>>(characters);
+        }
+
+        [HttpGet("{id}/movies")]
+        public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMoviesInFranchise(int id)
+        {
+            try
+            {
+                var franchise = await _franchiseRepository.GetWithMoviesAsync(id);
+                if (franchise == null) return NotFound();
+                return MapAndReturn<IEnumerable<Movie>, IEnumerable<MovieDTO>>(franchise.Movies);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPut("{id}/movies")]
+        public async Task<ActionResult<FranchiseDTO>> UpdateMoviesInFranchise(int id, [FromBody] IEnumerable<int> movieIds)
+        {
+            try
+            {
+                var franchise = await _franchiseRepository.UpdateMoviesAsync(id, movieIds);
+                if (franchise == null) return NotFound();
+                return MapAndReturn<Franchise, FranchiseDTO>(franchise);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
     }
 } 

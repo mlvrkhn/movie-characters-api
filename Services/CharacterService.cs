@@ -1,50 +1,73 @@
-using Microsoft.EntityFrameworkCore;
-using MovieCharactersAPI.Data;
 using MovieCharactersAPI.Models;
-
+using MovieCharactersAPI.Features.Characters;
+using AutoMapper;
 
 public class CharacterService : ICharacterService
 {
-    private readonly MovieCharactersDbContext _context;
+    private readonly ICharacterRepository _characterRepository;
+    private readonly IMapper _mapper;
 
-    public CharacterService(MovieCharactersDbContext context)
+    public CharacterService(ICharacterRepository characterRepository, IMapper mapper)
     {
-        _context = context;
+        _characterRepository = characterRepository;
+        _mapper = mapper;
     }
 
-    public async Task<Character?> GetCharacterByIdAsync(int id)
+    public async Task<CharacterDTO> AddCharacterAsync(CharacterCreateDTO characterDto)
     {
-        return await _context.Characters
-            .Include(c => c.Movies)
-            .FirstOrDefaultAsync(c => c.Id == id);
+        // Validation
+        if (string.IsNullOrEmpty(characterDto.FullName))
+            throw new ArgumentException("Character name cannot be empty");
+
+        // Map DTO to entity
+        var character = _mapper.Map<Character>(characterDto);
+        
+        // Save to database
+        var savedCharacter = await _characterRepository.AddAsync(character);
+        
+        // Map back to DTO
+        return _mapper.Map<CharacterDTO>(savedCharacter);
     }
 
-    public async Task<IEnumerable<Character>> GetAllCharactersAsync()
+    public async Task<CharacterDTO> UpdateCharacterAsync(int id, CharacterUpdateDTO characterDto)
     {
-        return await _context.Characters
-            .Include(c => c.Movies)
-            .ToListAsync();
+        // Validation
+        if (string.IsNullOrEmpty(characterDto.FullName))
+            throw new ArgumentException("Character name cannot be empty");
+
+        var existingCharacter = await _characterRepository.GetByIdAsync(id);
+        _mapper.Map(characterDto, existingCharacter);
+        
+        var updatedCharacter = await _characterRepository.UpdateAsync(existingCharacter);
+        return _mapper.Map<CharacterDTO>(updatedCharacter);
     }
 
-    public async Task AddCharacterAsync(Character character)
+    public async Task<CharacterDTO?> GetCharacterByIdAsync(int id)
     {
-        await _context.Characters.AddAsync(character);
-        await _context.SaveChangesAsync();
+        try
+        {
+            var character = await _characterRepository.GetByIdAsync(id);
+            return character == null ? throw new Exception($"Character with ID {id} not found") : _mapper.Map<CharacterDTO>(character);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to retrieve character: {ex.Message}");
+        }
     }
 
-    public async Task UpdateCharacterAsync(Character character)
+    public async Task<IEnumerable<CharacterDTO>> GetAllCharactersAsync()
     {
-        _context.Entry(character).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        var characters = await _characterRepository.GetAllAsync();
+        return _mapper.Map<IEnumerable<CharacterDTO>>(characters);
     }
 
     public async Task DeleteCharacterAsync(int id)
     {
-        var character = await _context.Characters.FindAsync(id);
-        if (character != null)
-        {
-            _context.Characters.Remove(character);
-            await _context.SaveChangesAsync();
-        }
+        await _characterRepository.DeleteAsync(id);
+    }
+
+    public async Task SoftDeleteCharacterAsync(int id)
+    {
+        await _characterRepository.SoftDeleteAsync(id);
     }
 } 

@@ -9,19 +9,19 @@ namespace MovieCharactersAPI.Controllers
     [Route("api/[controller]")]
     public class CharactersController : BaseApiController
     {
-        private readonly ICharacterRepository _characterRepository;
+        private readonly ICharacterService _characterService;
 
-        public CharactersController(ICharacterRepository characterRepository, IMapper mapper)
+        public CharactersController(ICharacterService characterService, IMapper mapper)
             : base(mapper)
         {
-            _characterRepository = characterRepository;
+            _characterService = characterService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CharacterDTO>>> GetCharacters()
         {
-            var characters = await _characterRepository.GetAllAsync();
-            return MapAndReturn<IEnumerable<Character>, IEnumerable<CharacterDTO>>(characters);
+            var characters = await _characterService.GetAllCharactersAsync();
+            return Ok(characters);
         }
 
         [HttpGet("{id}")]
@@ -29,8 +29,8 @@ namespace MovieCharactersAPI.Controllers
         {
             try
             {
-                var character = await _characterRepository.GetByIdAsync(id);
-                return MapAndReturn<Character, CharacterDTO>(character);
+                var character = await _characterService.GetCharacterByIdAsync(id);
+                return Ok(character);
             }
             catch (KeyNotFoundException)
             {
@@ -42,8 +42,8 @@ namespace MovieCharactersAPI.Controllers
         public async Task<ActionResult<CharacterDTO>> CreateCharacter(CharacterCreateDTO characterDto)
         {
             var character = _mapper.Map<Character>(characterDto);
-            var newCharacter = await _characterRepository.AddAsync(character);
-            return MapAndReturnCreated<Character, CharacterDTO>(newCharacter, nameof(GetCharacter), new { id = newCharacter.Id });
+            var newCharacter = await _characterService.AddCharacterAsync(characterDto);
+            return CreatedAtAction(nameof(GetCharacter), new { id = character.Id }, newCharacter);
         }
 
         [HttpPut("{id}")]
@@ -51,14 +51,16 @@ namespace MovieCharactersAPI.Controllers
         {
             try
             {
-                var existingCharacter = await _characterRepository.GetByIdAsync(id);
-                _mapper.Map(characterDto, existingCharacter);
-                var updatedCharacter = await _characterRepository.UpdateAsync(existingCharacter);
-                return MapAndReturn<Character, CharacterDTO>(updatedCharacter);
+                var updatedCharacter = await _characterService.UpdateCharacterAsync(id, characterDto);
+                return Ok(updatedCharacter);
             }
             catch (KeyNotFoundException)
             {
                 return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
@@ -67,7 +69,7 @@ namespace MovieCharactersAPI.Controllers
         {
             try
             {
-                await _characterRepository.DeleteAsync(id);
+                await _characterService.DeleteCharacterAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)

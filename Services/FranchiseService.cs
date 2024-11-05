@@ -1,71 +1,70 @@
-using Microsoft.EntityFrameworkCore;
-using MovieCharactersAPI.Data;
 using MovieCharactersAPI.Models;
 
 public class FranchiseService : IFranchiseService
 {
-    private readonly MovieCharactersDbContext _context;
+    private readonly IFranchiseRepository _franchiseRepository;
+    private readonly IMovieRepository _movieRepository;
 
-    public FranchiseService(MovieCharactersDbContext context)
+    public FranchiseService(IFranchiseRepository franchiseRepository, IMovieRepository movieRepository)
     {
-        _context = context;
+        _franchiseRepository = franchiseRepository;
+        _movieRepository = movieRepository;
+    }
+
+    public async Task<Franchise> AddFranchiseAsync(Franchise franchise)
+    {
+        if (string.IsNullOrEmpty(franchise.Name))
+            throw new ArgumentException("Franchise name cannot be empty");
+
+        return await _franchiseRepository.AddAsync(franchise);
+    }
+
+    public async Task<Franchise?> UpdateFranchiseMoviesAsync(int franchiseId, int[] movieIds)
+    {
+        if (!await _franchiseRepository.ExistsAsync(franchiseId))
+            throw new KeyNotFoundException($"Franchise with ID {franchiseId} not found");
+
+        foreach (var movieId in movieIds)
+        {
+            if (!await _movieRepository.ExistsAsync(movieId))
+                throw new KeyNotFoundException($"Movie with ID {movieId} not found");
+        }
+
+        return await _franchiseRepository.UpdateMoviesAsync(franchiseId, movieIds);
     }
 
     public async Task<Franchise?> GetFranchiseByIdAsync(int id)
     {
-        return await _context.Franchises
-            .Include(f => f.Movies)
-            .FirstOrDefaultAsync(f => f.Id == id);
+        return await _franchiseRepository.GetByIdAsync(id);
     }
 
     public async Task<IEnumerable<Franchise>> GetAllFranchisesAsync()
     {
-        return await _context.Franchises
-            .Include(f => f.Movies)
-            .ToListAsync();
-    }
-
-    public async Task AddFranchiseAsync(Franchise franchise)
-    {
-        await _context.Franchises.AddAsync(franchise);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateFranchiseAsync(Franchise franchise)
-    {
-        _context.Entry(franchise).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        return await _franchiseRepository.GetAllAsync();
     }
 
     public async Task DeleteFranchiseAsync(int id)
     {
-        var franchise = await _context.Franchises.FindAsync(id);
-        if (franchise != null)
-        {
-            _context.Franchises.Remove(franchise);
-            await _context.SaveChangesAsync();
-        }
+        await _franchiseRepository.DeleteAsync(id);
     }
 
-    public async Task UpdateFranchiseMoviesAsync(int franchiseId, int[] movieIds)
+    public async Task<IEnumerable<Franchise>> GetFranchisesByOwnerAsync(int ownerId)
     {
-        var franchise = await _context.Franchises
-            .Include(f => f.Movies)
-            .FirstOrDefaultAsync(f => f.Id == franchiseId);
+        return await _franchiseRepository.GetByOwnerIdAsync(ownerId);
+    }
 
-        if (franchise == null)
-            throw new KeyNotFoundException($"Franchise with ID {franchiseId} not found");
+    public async Task<Franchise?> GetFranchiseWithMoviesAsync(int franchiseId)
+    {
+        return await _franchiseRepository.GetWithMoviesAsync(franchiseId);
+    }
 
-        var movies = await _context.Movies
-            .Where(m => movieIds.Contains(m.Id))
-            .ToListAsync();
+    public async Task<IEnumerable<Character>> GetFranchiseCharactersAsync(int franchiseId)
+    {
+        return await _franchiseRepository.GetCharactersInFranchiseAsync(franchiseId);
+    }
 
-        franchise.Movies.Clear();
-        foreach (var movie in movies)
-        {
-            franchise.Movies.Add(movie);
-        }
-
-        await _context.SaveChangesAsync();
+    public async Task<Franchise> UpdateFranchiseAsync(Franchise franchise)
+    {
+        return await _franchiseRepository.UpdateAsync(franchise);
     }
 } 

@@ -1,49 +1,44 @@
-using Microsoft.EntityFrameworkCore;
-using MovieCharactersAPI.Data;
 using MovieCharactersAPI.Models;
+using MovieCharactersAPI.Repositories;
 
 namespace MovieCharactersAPI.Services
 {
     public class MovieService : IMovieService
     {
-        private readonly MovieCharactersDbContext _context;
+        private readonly IMovieRepository _movieRepository;
 
-        public MovieService(MovieCharactersDbContext context)
+        public MovieService(IMovieRepository movieRepository)
         {
-            _context = context;
+            _movieRepository = movieRepository;
         }
 
         public async Task<Movie> GetMovieByIdAsync(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _movieRepository.GetByIdAsync(id);
             return movie ?? throw new KeyNotFoundException($"Movie with ID {id} not found");
         }
 
         public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
         {
-            return await _context.Movies.ToListAsync();
+            return await _movieRepository.GetAllAsync();
         }
 
         public async Task AddMovieAsync(Movie movie)
         {
-            await _context.Movies.AddAsync(movie);
-            await _context.SaveChangesAsync();
+            await _movieRepository.CreateAsync(movie);
         }
 
         public async Task UpdateMovieAsync(Movie movie)
         {
-            _context.Movies.Update(movie);
-            await _context.SaveChangesAsync();
+            await _movieRepository.UpdateAsync(movie);
         }
 
         public async Task DeleteMovieAsync(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie != null)
-            {
-                _context.Movies.Remove(movie);
-                await _context.SaveChangesAsync();
-            }
+            if (!await _movieRepository.ExistsAsync(id))
+                throw new KeyNotFoundException($"Movie with ID {id} not found");
+            
+            await _movieRepository.DeleteAsync(id);
         }
     }
 }

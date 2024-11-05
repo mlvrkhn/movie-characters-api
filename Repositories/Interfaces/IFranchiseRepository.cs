@@ -19,11 +19,11 @@ public interface IFranchiseRepository
     Task<Franchise?> GetByIdAsync(int id);
 
     /// <summary>
-    /// Creates a new franchise in the database
+    /// Adds a new franchise to the database
     /// </summary>
-    /// <param name="franchise">The franchise entity to create</param>
-    /// <returns>The created franchise with updated ID</returns>
-    Task<Franchise> CreateAsync(Franchise franchise);
+    /// <param name="franchise">The franchise entity to add</param>
+    /// <returns>The added franchise with updated ID</returns>
+    Task<Franchise> AddAsync(Franchise franchise);
 
     /// <summary>
     /// Updates an existing franchise in the database
@@ -53,23 +53,17 @@ public interface IFranchiseRepository
     Task<IEnumerable<Franchise>> GetByOwnerIdAsync(int ownerId);
 
     /// <summary>
-    /// Adds a new franchise to the database
-    /// </summary>
-    /// <param name="franchise">The franchise entity to add</param>
-    /// <returns>The added franchise with updated ID</returns>
-    Task<Franchise> AddAsync(Franchise franchise);
-
-    /// <summary>
     /// Retrieves a franchise with its movies
     /// </summary>
-    Task<Franchise?> GetMoviesInFranchiseAsync(int franchiseId);
+    Task<Franchise?> GetWithMoviesAsync(int franchiseId);
 
     /// <summary>
     /// Updates the movies in a franchise
     /// </summary>
     /// <param name="franchiseId">The ID of the franchise</param>
-    /// 
-    Task<Franchise?> UpdateMoviesInFranchiseAsync(int franchiseId, IEnumerable<int> movieIds);
+    /// <param name="movieIds">The IDs of the movies to add to the franchise</param>
+    /// <returns>The updated franchise</returns>
+    Task<Franchise?> UpdateMoviesAsync(int franchiseId, IEnumerable<int> movieIds);
 
     /// <summary>
     /// Retrieves all characters in a franchise
@@ -77,5 +71,4 @@ public interface IFranchiseRepository
     /// <param name="franchiseId">The ID of the franchise</param>
     /// <returns>A collection of characters in the specified franchise</returns>
     Task<IEnumerable<Character>> GetCharactersInFranchiseAsync(int franchiseId);
-
 }
