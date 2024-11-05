@@ -34,4 +34,10 @@ public interface ICharacterRepository
     /// </summary>
     /// <param name="id">The ID of the character to delete</param>
     Task DeleteAsync(int id);
+
+    /// <summary>
+    /// Marks a character as deleted in the database asynchronously
+    /// </summary>
+    /// <param name="id">The ID of the character to mark as deleted</param>
+    Task SoftDeleteAsync(int id);
 }

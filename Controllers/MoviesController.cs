@@ -1,16 +1,19 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieCharactersAPI.Models;
 using MovieCharactersAPI.Features.Movies;
+using MovieCharactersAPI.Features.Characters;
+using AutoMapper;
 
 namespace MovieCharactersAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class MoviesController : ControllerBase
+    public class MoviesController : BaseApiController
     {
         private readonly IMovieRepository _movieRepository;
 
-        public MoviesController(IMovieRepository movieRepository)
+        public MoviesController(IMovieRepository movieRepository, IMapper mapper)
+            : base(mapper)
         {
             _movieRepository = movieRepository;
         }
@@ -19,24 +22,17 @@ namespace MovieCharactersAPI.Controllers
         public async Task<ActionResult<IEnumerable<MovieDTO>>> GetMovies()
         {
             var movies = await _movieRepository.GetAllAsync();
-            var movieDtos = movies.Select(m => new MovieDTO
-            {
-                Id = m.Id,
-                Title = m.Title,
-                CharacterIds = m.Characters.Select(c => c.Id).ToList(),
-                FranchiseId = m.FranchiseId
-            });
-            
-            return Ok(movieDtos);
+            return MapAndReturn<IEnumerable<Movie>, IEnumerable<MovieDTO>>(movies);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<MovieDetailDTO>> GetMovie(int id)
+        public async Task<ActionResult<MovieDTO>> GetMovie(int id)
         {   
             try
             {
                 var movie = await _movieRepository.GetByIdAsync(id);
-                return Ok(movie);
+                if (movie == null) return NotFound();
+                return MapAndReturn<Movie, MovieDTO>(movie);
             }
             catch (KeyNotFoundException)
             {
@@ -45,22 +41,27 @@ namespace MovieCharactersAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Movie>> CreateMovie(Movie movie)
+        public async Task<ActionResult<MovieDTO>> CreateMovie(MovieCreateDTO movieDto)
         {
+            var movie = _mapper.Map<Movie>(movieDto);
             var createdMovie = await _movieRepository.CreateAsync(movie);
-            return CreatedAtAction(nameof(GetMovie), new { id = createdMovie.Id }, createdMovie);
+            return MapAndReturnCreated<Movie, MovieDTO>(
+                createdMovie, 
+                nameof(GetMovie), 
+                new { id = createdMovie.Id });
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Movie>> UpdateMovie(int id, Movie movie)
+        public async Task<ActionResult<MovieDTO>> UpdateMovie(int id, MovieUpdateDTO movieDto)
         {
-            if (id != movie.Id)
+            if (id != movieDto.Id)
                 return BadRequest();
 
             try
             {
+                var movie = _mapper.Map<Movie>(movieDto);
                 var updatedMovie = await _movieRepository.UpdateAsync(movie);
-                return Ok(updatedMovie);
+                return MapAndReturn<Movie, MovieDTO>(updatedMovie);
             }
             catch (KeyNotFoundException)
             {
@@ -80,6 +81,13 @@ namespace MovieCharactersAPI.Controllers
             {
                 return NotFound();
             }
+        }
+
+        [HttpGet("{id}/characters")]
+        public async Task<ActionResult<IEnumerable<CharacterDTO>>> GetCharactersInMovie(int id)
+        {
+            var characters = await _movieRepository.GetCharactersInMovieAsync(id);
+            return MapAndReturn<IEnumerable<Character>, IEnumerable<CharacterDTO>>(characters);
         }
     }
 } 

@@ -38,6 +38,10 @@ public class FranchiseRepository : IFranchiseRepository
 
     public async Task<Franchise> UpdateAsync(Franchise franchise)
     {
+        var exists = await ExistsAsync(franchise.Id);
+        if (!exists)
+            throw new KeyNotFoundException($"Franchise with ID {franchise.Id} not found");
+
         _context.Entry(franchise).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return franchise;
@@ -45,12 +49,11 @@ public class FranchiseRepository : IFranchiseRepository
 
     public async Task DeleteAsync(int id)
     {
-        var franchise = await _context.Franchises.FindAsync(id);
-        if (franchise != null)
-        {
-            _context.Franchises.Remove(franchise);
-            await _context.SaveChangesAsync();
-        }
+        var franchise = await _context.Franchises.FindAsync(id)
+            ?? throw new KeyNotFoundException($"Franchise with ID {id} not found");
+        
+        _context.Franchises.Remove(franchise);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<bool> ExistsAsync(int id)
@@ -70,5 +73,29 @@ public class FranchiseRepository : IFranchiseRepository
         await _context.Franchises.AddAsync(franchise);
         await _context.SaveChangesAsync();
         return franchise;
+    }
+
+    public async Task<Franchise?> GetMoviesInFranchiseAsync(int franchiseId)
+    {
+        return await _context.Franchises
+            .Include(f => f.Movies)
+            .FirstOrDefaultAsync(f => f.Id == franchiseId);
+    }
+
+    public async Task<Franchise?> UpdateMoviesInFranchiseAsync(int franchiseId, IEnumerable<int> movieIds)
+    {
+        var franchise = await GetMoviesInFranchiseAsync(franchiseId);
+        if (franchise == null) throw new KeyNotFoundException("Franchise not found");
+
+        franchise.Movies = await _context.Movies.Where(m => movieIds.Contains(m.Id)).ToListAsync();
+        await _context.SaveChangesAsync();
+        return franchise;
+    }
+
+    public async Task<IEnumerable<Character>> GetCharactersInFranchiseAsync(int franchiseId)
+    {
+        return await _context.Characters
+            .Where(c => c.Movies.Any(m => m.FranchiseId == franchiseId))
+            .ToListAsync();
     }
 } 

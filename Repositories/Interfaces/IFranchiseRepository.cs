@@ -58,4 +58,24 @@ public interface IFranchiseRepository
     /// <param name="franchise">The franchise entity to add</param>
     /// <returns>The added franchise with updated ID</returns>
     Task<Franchise> AddAsync(Franchise franchise);
+
+    /// <summary>
+    /// Retrieves a franchise with its movies
+    /// </summary>
+    Task<Franchise?> GetMoviesInFranchiseAsync(int franchiseId);
+
+    /// <summary>
+    /// Updates the movies in a franchise
+    /// </summary>
+    /// <param name="franchiseId">The ID of the franchise</param>
+    /// 
+    Task<Franchise?> UpdateMoviesInFranchiseAsync(int franchiseId, IEnumerable<int> movieIds);
+
+    /// <summary>
+    /// Retrieves all characters in a franchise
+    /// </summary>
+    /// <param name="franchiseId">The ID of the franchise</param>
+    /// <returns>A collection of characters in the specified franchise</returns>
+    Task<IEnumerable<Character>> GetCharactersInFranchiseAsync(int franchiseId);
+
 }

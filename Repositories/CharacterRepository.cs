@@ -17,6 +17,7 @@ namespace MovieCharactersAPI.Repositories
         {
             return await _context.Characters
                 .Include(c => c.Movies)
+                .Where(c => !c.IsDeleted)
                 .ToListAsync();
         }
 
@@ -24,7 +25,7 @@ namespace MovieCharactersAPI.Repositories
         {
             return await _context.Characters
                 .Include(c => c.Movies)
-                .FirstOrDefaultAsync(c => c.Id == id) 
+                .FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted)
                 ?? throw new KeyNotFoundException($"Character with ID {id} not found");
         }
 
@@ -37,19 +38,30 @@ namespace MovieCharactersAPI.Repositories
 
         public async Task<Character> UpdateAsync(Character character)
         {
-            _context.Entry(character).State = EntityState.Modified;
+            var existingCharacter = await _context.Characters.FindAsync(character.Id)
+                ?? throw new KeyNotFoundException($"Character with ID {character.Id} not found");
+            
+            _context.Entry(existingCharacter).CurrentValues.SetValues(character);
             await _context.SaveChangesAsync();
-            return character;
+            return existingCharacter;
         }
 
         public async Task DeleteAsync(int id)
         {
-            var character = await _context.Characters.FindAsync(id);
-            if (character != null)
-            {
-                _context.Characters.Remove(character);
-                await _context.SaveChangesAsync();
-            }
+            var character = await _context.Characters.FindAsync(id)
+                ?? throw new KeyNotFoundException($"Character with ID {id} not found");
+            
+            _context.Characters.Remove(character);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SoftDeleteAsync(int id)
+        {
+            var character = await _context.Characters.FindAsync(id)
+                ?? throw new KeyNotFoundException($"Character with ID {id} not found");
+            
+            character.IsDeleted = true;
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,16 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieCharactersAPI.Models;
 using MovieCharactersAPI.Features.Characters;
+using AutoMapper;
 
 namespace MovieCharactersAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CharactersController : ControllerBase
+    public class CharactersController : BaseApiController
     {
         private readonly ICharacterRepository _characterRepository;
 
-        public CharactersController(ICharacterRepository characterRepository)
+        public CharactersController(ICharacterRepository characterRepository, IMapper mapper)
+            : base(mapper)
         {
             _characterRepository = characterRepository;
         }
@@ -19,26 +21,16 @@ namespace MovieCharactersAPI.Controllers
         public async Task<ActionResult<IEnumerable<CharacterDTO>>> GetCharacters()
         {
             var characters = await _characterRepository.GetAllAsync();
-            var characterDtos = characters.Select(c => new CharacterDTO
-            {
-                Id = c.Id,
-                Name = c.FullName,
-                Alias = c.Alias,
-                Gender = c.Gender,
-                Picture = c.Picture,
-                MovieIds = c.Movies.Select(m => m.Id).ToList()
-            });
-            
-            return Ok(characterDtos);
+            return MapAndReturn<IEnumerable<Character>, IEnumerable<CharacterDTO>>(characters);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Character>> GetCharacter(int id)
+        public async Task<ActionResult<CharacterDTO>> GetCharacter(int id)
         {
             try
             {
                 var character = await _characterRepository.GetByIdAsync(id);
-                return Ok(character);
+                return MapAndReturn<Character, CharacterDTO>(character);
             }
             catch (KeyNotFoundException)
             {
@@ -47,22 +39,22 @@ namespace MovieCharactersAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Character>> CreateCharacter(Character character)
+        public async Task<ActionResult<CharacterDTO>> CreateCharacter(CharacterCreateDTO characterDto)
         {
+            var character = _mapper.Map<Character>(characterDto);
             var newCharacter = await _characterRepository.AddAsync(character);
-            return CreatedAtAction(nameof(GetCharacter), new { id = newCharacter.Id }, newCharacter);
+            return MapAndReturnCreated<Character, CharacterDTO>(newCharacter, nameof(GetCharacter), new { id = newCharacter.Id });
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Character>> UpdateCharacter(int id, Character character)
+        public async Task<ActionResult<CharacterDTO>> UpdateCharacter(int id, CharacterUpdateDTO characterDto)
         {
-            if (id != character.Id)
-                return BadRequest();
-
             try
             {
-                var updatedCharacter = await _characterRepository.UpdateAsync(character);
-                return Ok(updatedCharacter);
+                var existingCharacter = await _characterRepository.GetByIdAsync(id);
+                _mapper.Map(characterDto, existingCharacter);
+                var updatedCharacter = await _characterRepository.UpdateAsync(existingCharacter);
+                return MapAndReturn<Character, CharacterDTO>(updatedCharacter);
             }
             catch (KeyNotFoundException)
             {

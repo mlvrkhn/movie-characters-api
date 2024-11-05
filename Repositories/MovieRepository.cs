@@ -66,4 +66,22 @@ public class MovieRepository : IMovieRepository
             .Where(m => m.FranchiseId == franchiseId)
             .ToListAsync();
     }
+
+    public async Task<IEnumerable<Character>> GetCharactersInMovieAsync(int movieId)
+    {
+        var movie = await _context.Movies
+            .Include(m => m.Characters)
+            .FirstOrDefaultAsync(m => m.Id == movieId);
+        return movie?.Characters ?? new List<Character>();
+    }
+
+    public async Task<Movie?> UpdateCharactersInMovieAsync(int movieId, IEnumerable<int> characterIds)
+    {
+        var movie = await GetByIdAsync(movieId);
+        if (movie == null) throw new KeyNotFoundException("Movie not found");
+
+        movie.Characters = await _context.Characters.Where(c => characterIds.Contains(c.Id)).ToListAsync();
+        await _context.SaveChangesAsync();
+        return movie;
+    }
 } 

@@ -4,6 +4,8 @@ namespace MovieCharactersAPI.Features.Movies;
 
 public class MovieUpdateDTO
 {
+    public int Id { get; set; }
+
     [Required]
     [MaxLength(100)]
     public string Title { get; set; } = string.Empty;

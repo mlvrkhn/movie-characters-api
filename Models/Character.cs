@@ -21,4 +21,6 @@ public class Character
     public string Picture { get; set; } = string.Empty;  
 
     public ICollection<Movie> Movies { get; set; } = new List<Movie>();
+
+    public bool IsDeleted { get; set; } = false;
 }
