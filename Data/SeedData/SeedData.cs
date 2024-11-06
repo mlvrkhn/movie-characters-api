@@ -1,7 +1,8 @@
 using MovieCharactersAPI.Models;
-
+using MovieCharactersAPI.Data;
 namespace MovieCharactersAPI.Data;
 
+    
 public static class SeedData
 {
     public static readonly IEnumerable<Franchise> Franchises = new[]
@@ -69,6 +70,42 @@ public static class SeedData
             Genre = "Drama/War",
             Director = "Isao Takahata",
             FranchiseId = 3
+        },
+        new Movie 
+        { 
+            Id = 5, 
+            Title = "Howl's Moving Castle", 
+            ReleaseYear = 2004,
+            Genre = "Fantasy/Romance",
+            Director = "Hayao Miyazaki",
+            FranchiseId = 4
+        },
+        new Movie 
+        { 
+            Id = 6, 
+            Title = "Kiki's Delivery Service", 
+            ReleaseYear = 1989,
+            Genre = "Fantasy/Coming-of-age",
+            Director = "Hayao Miyazaki",
+            FranchiseId = 2
+        },
+        new Movie 
+        { 
+            Id = 7, 
+            Title = "Only Yesterday", 
+            ReleaseYear = 1991,
+            Genre = "Drama",
+            Director = "Isao Takahata",
+            FranchiseId = 3
+        },
+        new Movie 
+        { 
+            Id = 8, 
+            Title = "Ponyo", 
+            ReleaseYear = 2008,
+            Genre = "Fantasy/Family",
+            Director = "Hayao Miyazaki",
+            FranchiseId = 4
         }
     };
 
@@ -105,6 +142,66 @@ public static class SeedData
             Alias = "Howl",
             Gender = "Male",
             Picture = "https://example.com/howl.jpg"
+        },
+        new Character 
+        { 
+            Id = 5, 
+            FullName = "Haku",
+            Alias = "Nigihayami Kohaku Nushi",
+            Gender = "Male",
+            Picture = "https://example.com/haku.jpg"
+        },
+        new Character 
+        { 
+            Id = 6, 
+            FullName = "Sophie Hatter",
+            Alias = "Grandma Sophie",
+            Gender = "Female",
+            Picture = "https://example.com/sophie.jpg"
+        },
+        new Character 
+        { 
+            Id = 7, 
+            FullName = "Kiki",
+            Alias = "The Witch",
+            Gender = "Female",
+            Picture = "https://example.com/kiki.jpg"
+        },
+        new Character 
+        { 
+            Id = 8, 
+            FullName = "Taeko Okajima",
+            Alias = "None",
+            Gender = "Female",
+            Picture = "https://example.com/taeko.jpg"
+        },
+        new Character 
+        { 
+            Id = 9, 
+            FullName = "Ponyo",
+            Alias = "Brunhilde",
+            Gender = "Female",
+            Picture = "https://example.com/ponyo.jpg"
+        },
+        new Character 
+        { 
+            Id = 10, 
+            FullName = "Sosuke",
+            Alias = "None",
+            Gender = "Male",
+            Picture = "https://example.com/sosuke.jpg"
         }
+    };
+
+    public static readonly IEnumerable<MovieCharacter> MovieCharacters = new[]
+    {
+        new MovieCharacter { CharacterId = 1, MovieId = 1 }, // Chihiro in Spirited Away
+        new MovieCharacter { CharacterId = 5, MovieId = 1 }, // Haku in Spirited Away
+        new MovieCharacter { CharacterId = 3, MovieId = 5 }, // San in Howl's Moving Castle
+        new MovieCharacter { CharacterId = 6, MovieId = 5 }, // Sophie in Howl's Moving Castle
+        new MovieCharacter { CharacterId = 7, MovieId = 6 }, // Kiki in Kiki's Delivery Service
+        new MovieCharacter { CharacterId = 8, MovieId = 7 }, // Taeko in Only Yesterday
+        new MovieCharacter { CharacterId = 9, MovieId = 8 }, // Ponyo in Ponyo
+        new MovieCharacter { CharacterId = 10, MovieId = 8 } // Sosuke in Ponyo
     };
 } 

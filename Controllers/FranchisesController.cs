@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieCharactersAPI.Models;
 using MovieCharactersAPI.Features.Franchises;
-using AutoMapper;
 using MovieCharactersAPI.Features.Characters;
 using MovieCharactersAPI.Features.Movies;
-using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace MovieCharactersAPI.Controllers
 {

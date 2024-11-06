@@ -1,0 +1,584 @@
+{
+	"info": {
+		"_postman_id": "0d8a045b-d4af-4cbb-8cfa-a091e94313b4",
+		"name": "NET",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13136957"
+	},
+	"item": [
+		{
+			"name": "movies",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/characters/5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"characters",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST movies",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"The Matrix\",\n    \"releaseYear\": 1999,\n    \"genre\": \"Science Fiction\",\n    \"director\": \"Lana and Lilly Wachowski\",\n    \"franchiseId\": 1,\n    \"characterIds\": [1, 2, 3]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/movies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT movies",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 5,\n    \"title\": \"The Matrix Remastered\",\n    \"releaseYear\": 1999,\n    \"genre\": \"Science Fiction/Action\",\n    \"director\": \"The Wachowskis\",\n    \"franchiseId\": 1,\n    \"characterIds\": [1, 2, 3, 4]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/movies/5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"movies",
+						"5"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT movies Copy",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 5,\n    \"title\": \"The Matrix Remastered\",\n    \"releaseYear\": 1999,\n    \"genre\": \"Science Fiction/Action\",\n    \"director\": \"The Wachowskis\",\n    \"franchiseId\": 1,\n    \"characterIds\": [1, 2, 3, 4]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/movies/5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"movies",
+						"5"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE movies",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 5,\n    \"title\": \"The Matrix Remastered\",\n    \"releaseYear\": 1999,\n    \"genre\": \"Science Fiction/Action\",\n    \"director\": \"The Wachowskis\",\n    \"franchiseId\": 1,\n    \"characterIds\": [1, 2, 3, 4]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/movies/5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"movies",
+						"5"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "characters",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/characters",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"characters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST characters",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Luke Skywalker\",\n    \"alias\": \"Red Five\",\n    \"gender\": \"Male\",\n    \"picture\": \"https://example.com/luke.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/characters",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"characters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST characters Copy",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"Kurwa Jebana\",\n  \"alias\": \"Tylko Kurwa\",\n  \"picture\": \"https://example.com/luke.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/characters/2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"characters",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE characters",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Luke Skywalker\",\n    \"alias\": \"Red Five\",\n    \"gender\": \"Male\",\n    \"picture\": \"https://example.com/luke.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/characters/5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"characters",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET franchises",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Luke Skywalker\",\n    \"alias\": \"Red Five\",\n    \"gender\": \"Male\",\n    \"picture\": \"https://example.com/luke.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/franchises",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET franchises owner",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/franchises/owner/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises",
+						"owner",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET franchises characters",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/franchises/1/characters",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises",
+						"1",
+						"characters"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET franchise movies",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/franchises/1/movies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises",
+						"1",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET franchise movies Copy",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/franchises/2/movies",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises",
+						"2",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST franchises",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Game of Thrones\",\n  \"description\": \"Game game game\",\n  \"movieIds\": [\n  ],\n  \"ownerId\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/franchises",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET franchises/id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"Luke Skywalker\",\n    \"alias\": \"Red Five\",\n    \"gender\": \"Male\",\n    \"picture\": \"https://example.com/luke.jpg\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/franchises",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "franchises/id",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": 2,\n  \"name\": \"Mazaki Collection\",\n  \"description\": \"New Better\",\n  \"movieIds\": [\n    1,2\n  ],\n  \"ownerId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:7234/api/franchises/2",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "franchises/id DELETE",
+			"request": {
+				"auth": {
+					"type": "apikey"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:7234/api/franchises/5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "7234",
+					"path": [
+						"api",
+						"franchises",
+						"5"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

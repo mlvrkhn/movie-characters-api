@@ -30,15 +30,5 @@ namespace MovieCharactersAPI.Controllers
             var mapped = _mapper.Map<TDestination>(source);
             return CreatedAtAction(actionName, routeValues, mapped);
         }
-
-        protected ActionResult<TDestination> MapAndReturnNotFound<TDestination>()
-        {
-            return NotFound();
-        }
-
-        protected ActionResult<TDestination> MapAndReturnBadRequest<TDestination>(string message)
-        {
-            return BadRequest(new { message });
-        }
     }
 } 
