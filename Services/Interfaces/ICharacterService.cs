@@ -41,4 +41,12 @@ public interface ICharacterService
     /// </summary>
     /// <param name="id">The ID of the character to soft delete</param>
     Task SoftDeleteCharacterAsync(int id);
+
+    /// <summary>
+    /// Retrieves all characters in a specific movie
+    /// </summary>
+    /// <param name="movieId">The ID of the movie</param>
+    /// <returns>A collection of characters in the specified movie</returns>
+    Task<IEnumerable<CharacterDTO>> GetCharactersInMovieAsync(int movieId);
+
 } 

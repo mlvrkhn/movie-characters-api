@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using MovieCharactersAPI.Features.Characters;
 
 namespace MovieCharactersAPI.Features.Movies;
 
 public class MovieUpdateDTO
 {
-    public int Id { get; set; }
-
     [Required]
     [MaxLength(100)]
     public string Title { get; set; } = string.Empty;
@@ -22,4 +21,6 @@ public class MovieUpdateDTO
     public string Director { get; set; } = string.Empty;
 
     public int FranchiseId { get; set; }
+
+    public List<int> CharacterIds { get; set; } = new();
 } 

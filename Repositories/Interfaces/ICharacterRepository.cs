@@ -40,4 +40,16 @@ public interface ICharacterRepository
     /// </summary>
     /// <param name="id">The ID of the character to mark as deleted</param>
     Task SoftDeleteAsync(int id);
+
+    /// <summary>
+    /// Retrieves all characters in a specific movie
+    /// </summary>
+    /// <param name="movieId">The ID of the movie</param>
+    /// <returns>A collection of characters in the specified movie</returns>
+    Task<IEnumerable<Character>> GetCharactersInMovieAsync(int movieId);
+
+    /// <summary>
+    /// Checks if a character exists by their ID
+    /// </summary>
+    Task<bool> ExistsAsync(int id);
 }

@@ -26,5 +26,4 @@ public class Movie
     public ICollection<Character> Characters { get; set; } = new List<Character>();
 
     public int FranchiseId { get; set; }
-    public Franchise? Franchise { get; set; }
 } 

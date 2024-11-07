@@ -22,13 +22,14 @@ public interface IMovieService
     /// Adds a new movie to the database
     /// </summary>
     /// <param name="movie">The movie entity to add</param>
-    Task AddMovieAsync(Movie movie);
+    Task CreateMovieAsync(Movie movie);
 
     /// <summary>
     /// Updates an existing movie in the database
     /// </summary>
     /// <param name="movie">The movie entity with updated information</param>
-    Task UpdateMovieAsync(Movie movie);
+    /// <param name="characterIds">The IDs of the characters to update</param>
+    Task UpdateMovieAsync(Movie movie, List<int> characterIds);
 
     /// <summary>
     /// Deletes a movie from the database

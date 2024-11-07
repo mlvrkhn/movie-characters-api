@@ -23,7 +23,15 @@ builder.Services.AddAutoMapper(cfg =>
     // Movie mappings
     cfg.CreateMap<Movie, MovieDTO>();
     cfg.CreateMap<MovieCreateDTO, Movie>();
-    cfg.CreateMap<MovieUpdateDTO, Movie>();
+    cfg.CreateMap<MovieUpdateDTO, Movie>()
+        .ForMember(dest => dest.Characters, opt => opt.Ignore())
+        .AfterMap((src, dest, context) =>
+        {
+            if (src.CharacterIds != null)
+            {
+                dest.Characters = src.CharacterIds.Select(id => new Character { Id = id }).ToList();
+            }
+        });
 
     // Franchise mappings
     cfg.CreateMap<Franchise, FranchiseDTO>().ReverseMap();

@@ -63,4 +63,10 @@ public class CharacterService : ICharacterService
     {
         await _characterRepository.SoftDeleteAsync(id);
     }
+
+    public async Task<IEnumerable<CharacterDTO>> GetCharactersInMovieAsync(int movieId)
+    {
+        var characters = await _characterRepository.GetCharactersInMovieAsync(movieId);
+        return _mapper.Map<IEnumerable<CharacterDTO>>(characters);
+    }
 } 

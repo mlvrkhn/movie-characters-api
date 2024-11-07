@@ -18,7 +18,6 @@ public class MovieRepository : IMovieRepository
     {
         return await _context.Movies
             .Include(m => m.Characters)
-            .Include(m => m.Franchise)
             .ToListAsync();
     }
 
@@ -26,12 +25,20 @@ public class MovieRepository : IMovieRepository
     {
         return await _context.Movies
             .Include(m => m.Characters)
-            .Include(m => m.Franchise)
             .FirstOrDefaultAsync(m => m.Id == id);
     }
 
     public async Task<Movie> CreateAsync(Movie movie)
     {
+        if (movie.FranchiseId > 0)
+        {
+            var franchiseExists = await _context.Franchises.AnyAsync(f => f.Id == movie.FranchiseId);
+            if (!franchiseExists)
+            {
+                throw new InvalidOperationException($"Franchise with ID {movie.FranchiseId} does not exist");
+            }
+        }
+
         _context.Movies.Add(movie);
         await _context.SaveChangesAsync();
         return movie;
@@ -39,7 +46,16 @@ public class MovieRepository : IMovieRepository
 
     public async Task<Movie> UpdateAsync(Movie movie)
     {
-        _context.Entry(movie).State = EntityState.Modified;
+        if (movie.FranchiseId > 0)
+        {
+            var franchiseExists = await _context.Franchises.AnyAsync(f => f.Id == movie.FranchiseId);
+            if (!franchiseExists)
+            {
+                throw new InvalidOperationException($"Franchise with ID {movie.FranchiseId} does not exist");
+            }
+        }
+
+        _context.Movies.Update(movie);
         await _context.SaveChangesAsync();
         return movie;
     }
@@ -73,15 +89,5 @@ public class MovieRepository : IMovieRepository
             .Include(m => m.Characters)
             .FirstOrDefaultAsync(m => m.Id == movieId);
         return movie?.Characters ?? new List<Character>();
-    }
-
-    public async Task<Movie?> UpdateCharactersInMovieAsync(int movieId, IEnumerable<int> characterIds)
-    {
-        var movie = await GetByIdAsync(movieId);
-        if (movie == null) throw new KeyNotFoundException("Movie not found");
-
-        movie.Characters = await _context.Characters.Where(c => characterIds.Contains(c.Id)).ToListAsync();
-        await _context.SaveChangesAsync();
-        return movie;
     }
 } 

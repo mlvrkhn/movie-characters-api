@@ -58,12 +58,4 @@ public interface IMovieRepository
     /// <param name="movieId">The ID of the movie</param>
     /// <returns>A collection of characters in the specified movie</returns>
     Task<IEnumerable<Character>> GetCharactersInMovieAsync(int movieId);
-
-    /// <summary>
-    /// Updates the characters in a movie
-    /// </summary>
-    /// <param name="movieId">The ID of the movie</param>
-    /// <param name="characterIds">The IDs of the characters to update the movie with</param>
-    /// <returns>The updated movie</returns>
-    Task<Movie?> UpdateCharactersInMovieAsync(int movieId, IEnumerable<int> characterIds);
 } 

@@ -30,7 +30,7 @@ A Web API for managing movies, characters, and franchises. This API allows you t
 ### Installation
 1. Clone the repository
 ```bash
-git clone [your-repository-url]
+git clone https://github.com/mlvrkhn/movie-characters-api.git
 ```
 
 2. Update the connection string in `appsettings.json`

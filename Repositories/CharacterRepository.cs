@@ -63,5 +63,18 @@ namespace MovieCharactersAPI.Repositories
             character.IsDeleted = true;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Character>> GetCharactersInMovieAsync(int movieId)
+        {
+            return await _context.Characters
+                .Include(c => c.Movies)
+                .Where(c => c.Movies.Any(m => m.Id == movieId) && !c.IsDeleted)
+                .ToListAsync();
+        }
+
+        public async Task<bool> ExistsAsync(int id)
+        {
+            return await _context.Characters.AnyAsync(c => c.Id == id);
+        }
     }
 }
