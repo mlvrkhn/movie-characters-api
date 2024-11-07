@@ -30,7 +30,8 @@ public interface IMovieRepository
     /// </summary>
     /// <param name="movie">The movie entity with updated values</param>
     /// <returns>The updated movie</returns>
-    Task<Movie> UpdateAsync(Movie movie);
+    Task<Movie> UpdateAsync(Movie movie, List<int> characterIds);
+    
 
     /// <summary>
     /// Deletes a movie from the database

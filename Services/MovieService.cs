@@ -35,22 +35,13 @@ namespace MovieCharactersAPI.Services
             if (!await _movieRepository.ExistsAsync(movie.Id))
                 throw new KeyNotFoundException($"Movie with ID {movie.Id} not found");
 
-            // Verify all character IDs exist
             foreach (var characterId in characterIds)
             {
                 if (!await _characterRepository.ExistsAsync(characterId))
                     throw new KeyNotFoundException($"Character with ID {characterId} not found");
             }
 
-            movie.Characters = characterIds.Select(id => new Character { Id = id }).ToList();
-            // Print movie details and its characters
-            Console.WriteLine($"Updating Movie: {movie.Title} (ID: {movie.Id})");
-            Console.WriteLine("Characters being assigned:");
-            foreach (var character in movie.Characters)
-            {
-                Console.WriteLine($"- Character ID: {character.Id}");
-            }
-            await _movieRepository.UpdateAsync(movie);
+            await _movieRepository.UpdateAsync(movie, characterIds);
         }
 
         public async Task DeleteMovieAsync(int id)

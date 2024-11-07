@@ -44,20 +44,30 @@ public class MovieRepository : IMovieRepository
         return movie;
     }
 
-    public async Task<Movie> UpdateAsync(Movie movie)
+    public async Task<Movie> UpdateAsync(Movie movie, List<int> characterIds)
     {
-        if (movie.FranchiseId > 0)
+        var existingMovie = await _context.Movies
+            .Include(m => m.Characters)
+            .FirstOrDefaultAsync(m => m.Id == movie.Id);
+
+        if (existingMovie == null)
+            throw new KeyNotFoundException($"Movie with ID {movie.Id} not found");
+
+        // Update scalar properties
+        _context.Entry(existingMovie).CurrentValues.SetValues(movie);
+
+        // Update characters
+        existingMovie.Characters.Clear();
+        var characters = await _context.Characters
+            .Where(c => characterIds.Contains(c.Id))
+            .ToListAsync();
+        foreach (var character in characters)
         {
-            var franchiseExists = await _context.Franchises.AnyAsync(f => f.Id == movie.FranchiseId);
-            if (!franchiseExists)
-            {
-                throw new InvalidOperationException($"Franchise with ID {movie.FranchiseId} does not exist");
-            }
+            existingMovie.Characters.Add(character);
         }
 
-        _context.Movies.Update(movie);
         await _context.SaveChangesAsync();
-        return movie;
+        return existingMovie;
     }
 
     public async Task DeleteAsync(int id)
