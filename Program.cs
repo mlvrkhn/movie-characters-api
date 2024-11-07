@@ -9,10 +9,9 @@ using MovieCharactersAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 
-// Add AutoMapper
+// AutoMapper
 builder.Services.AddAutoMapper(cfg =>
 {
     // Character mappings
@@ -66,7 +65,6 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    // During development, you can temporarily redirect HTTP to HTTPS
     app.UseHttpsRedirection();
 }
 else 
@@ -75,7 +73,5 @@ else
 }
 
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

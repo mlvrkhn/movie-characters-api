@@ -1,5 +1,4 @@
 using MovieCharactersAPI.Models;
-using MovieCharactersAPI.Repositories;
 
 namespace MovieCharactersAPI.Services
 {

@@ -2,9 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using MovieCharactersAPI.Models;
 using MovieCharactersAPI.Data;
 
-/// <summary>
-/// Implementation of IMovieRepository for managing Movie entities
-/// </summary>
 public class MovieRepository : IMovieRepository
 {
     private readonly MovieCharactersDbContext _context;

@@ -15,23 +15,18 @@ public class CharacterService : ICharacterService
 
     public async Task<CharacterDTO> AddCharacterAsync(CharacterCreateDTO characterDto)
     {
-        // Validation
         if (string.IsNullOrEmpty(characterDto.FullName))
             throw new ArgumentException("Character name cannot be empty");
 
-        // Map DTO to entity
         var character = _mapper.Map<Character>(characterDto);
         
-        // Save to database
         var savedCharacter = await _characterRepository.AddAsync(character);
         
-        // Map back to DTO
         return _mapper.Map<CharacterDTO>(savedCharacter);
     }
 
     public async Task<CharacterDTO> UpdateCharacterAsync(int id, CharacterUpdateDTO characterDto)
     {
-        // Validation
         if (string.IsNullOrEmpty(characterDto.FullName))
             throw new ArgumentException("Character name cannot be empty");
 
